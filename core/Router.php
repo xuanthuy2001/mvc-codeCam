@@ -37,11 +37,14 @@
          
             return $this -> renderView( $callback);
         }
+        if(is_array($callback)){
+          $callback[0] = new $callback[0]();
+        }
         return call_user_func($callback);//không hiểu lắm nhứng chắc là lấy nội dung trả về trong funtion
     }
-  public function renderView($view){ //renderView("home")
+  public function renderView($view, $params=[]){ //renderView("home")
     $layoutContent = $this->layoutContent();
-    $viewContent  = $this->renderOnLyView($view);
+    $viewContent  = $this->renderOnLyView($view, $params);
     return str_replace('{{content}}', $viewContent ,$layoutContent);
   }
   public function renderContentView($viewContent){
@@ -53,7 +56,11 @@
     include_once  Application::$ROOT_DIR."/views/layouts/main.php";
     return ob_get_clean();
   }
-  public function renderOnLyView($view){
+  public function renderOnLyView($view, $params){
+    // extract($params); chuyển key của mảng thành biến
+    foreach($params as $key => $value){
+      $$key = $value;
+    }
     ob_start();
     include_once  Application::$ROOT_DIR."/views/$view.php";
     return ob_get_clean();
