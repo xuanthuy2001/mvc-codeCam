@@ -18,6 +18,10 @@
       $this -> routes['get'][$path] = $callback; 
       // routes['get']['/'] = function ( ){return "hello world";}
     }
+    public function post($path , $callback){
+      $this -> routes['post'][$path] = $callback; 
+     
+    }
 
     public function resolve(){
       $path = $this -> request  -> getPath();
@@ -27,7 +31,7 @@
       $callback = $this -> routes[$method][$path] ?? false; // routes['get']['/']
         if($callback === false){
           $this -> response -> setStatusCode(404);
-          return "not found ";
+          return  $this -> renderView("_404");
         }
         if(is_string($callback)){
          
@@ -39,6 +43,10 @@
     $layoutContent = $this->layoutContent();
     $viewContent  = $this->renderOnLyView($view);
     return str_replace('{{content}}', $viewContent ,$layoutContent);
+  }
+  public function renderContentView($viewContent){
+      $layoutContent = $this->layoutContent();
+      return str_replace('{{content}}', $viewContent ,$layoutContent);
   }
   public function layoutContent(){
     ob_start();

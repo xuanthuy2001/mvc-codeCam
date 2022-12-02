@@ -7,4 +7,7 @@
 
     $app -> router -> get('/','home');
     $app -> router -> get('/contact','contact');
+    $app -> router -> post('/contact',function (){
+        return 'handle submit data';
+    });
     $app -> run();
