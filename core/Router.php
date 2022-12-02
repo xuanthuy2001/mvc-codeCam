@@ -3,12 +3,14 @@
 
     class Router {
     public Request $request;
+    public Response $response;
 
     protected array $routes = [];
 
 
-    public function __construct(Request $request){
+    public function __construct(Request $request, Response $response){
       $this -> request = $request ;
+      $this -> response = $response ;
     }
 
 
@@ -24,14 +26,16 @@
       
       $callback = $this -> routes[$method][$path] ?? false; // routes['get']['/']
         if($callback === false){
+          $this -> response -> setStatusCode(404);
           return "not found ";
         }
         if(is_string($callback)){
+         
             return $this -> renderView( $callback);
         }
         return call_user_func($callback);//không hiểu lắm nhứng chắc là lấy nội dung trả về trong funtion
     }
-  public function renderView($view){
+  public function renderView($view){ //renderView("home")
     $layoutContent = $this->layoutContent();
     $viewContent  = $this->renderOnLyView($view);
     return str_replace('{{content}}', $viewContent ,$layoutContent);
