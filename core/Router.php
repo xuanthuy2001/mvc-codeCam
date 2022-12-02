@@ -24,9 +24,26 @@
       
       $callback = $this -> routes[$method][$path] ?? false; // routes['get']['/']
         if($callback === false){
-          echo "not found ";
-          exit();
+          return "not found ";
         }
-        echo call_user_func($callback);//không hiểu lắm nhứng chắc là lấy nội dung trả về trong funtion
+        if(is_string($callback)){
+            return $this -> renderView( $callback);
+        }
+        return call_user_func($callback);//không hiểu lắm nhứng chắc là lấy nội dung trả về trong funtion
     }
-   }
+  public function renderView($view){
+    $layoutContent = $this->layoutContent();
+    $viewContent  = $this->renderOnLyView($view);
+    return str_replace('{{content}}', $viewContent ,$layoutContent);
+  }
+  public function layoutContent(){
+    ob_start();
+    include_once  Application::$ROOT_DIR."/views/layouts/main.php";
+    return ob_get_clean();
+  }
+  public function renderOnLyView($view){
+    ob_start();
+    include_once  Application::$ROOT_DIR."/views/$view.php";
+    return ob_get_clean();
+  }
+}
