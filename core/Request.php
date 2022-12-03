@@ -28,4 +28,23 @@ class Request
   public function getMethod(){
       return strtolower($_SERVER['REQUEST_METHOD']);
   }
+  public function getBody(){
+    $body=[];
+    if($this -> getMethod() === 'get'){
+      foreach($_GET as $key => $value){
+        $body[$key] = filter_input(INPUT_GET, $key , FILTER_SANITIZE_SPECIAL_CHARS);
+        // filter_input (): Nhận một biến bên ngoài và lọc nó 
+        // filter_input($type, $var_name, $filter, $options)
+        // Trong đó: $type là nơi lấy giá trị dữ liệu để kiểm tra / biến đổi, bạn thiết lập nó bằng một trong các giá trị INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER, INPUT_ENV. Tương ứng giá trị kiểm tra sẽ lấy từ mảng biến toàn cục $_GET,$_POST,$_COOKIE, $_SERVER, $_ENV.
+        // $var_name tên biến, tên phần tử lấy để kiểm tra.
+        // FILTER_SANITIZE_SPECIAL_CHARS: Xóa các ký tự đặc biệt để bảo mật 
+      }
+    }
+    if($this -> getMethod() === 'post'){
+      foreach($_POST as $key => $value){
+        $body[$key] = filter_input(INPUT_POST, $key , FILTER_SANITIZE_SPECIAL_CHARS);
+       }
+    }
+    return  $body;
+  }
 }

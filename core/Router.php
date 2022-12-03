@@ -33,14 +33,22 @@
           $this -> response -> setStatusCode(404);
           return  $this -> renderView("_404");
         }
+
         if(is_string($callback)){
          
             return $this -> renderView( $callback);
         }
+        // phù hợp khi viết  get('/home',[SiteController::class, 'home']);
         if(is_array($callback)){
           $callback[0] = new $callback[0]();
         }
-        return call_user_func($callback);//không hiểu lắm nhứng chắc là lấy nội dung trả về trong funtion
+      //  echo '<pre>';
+      //  var_dump($callback); 
+      // => [0]=>object(app\controllers\SiteController)#6 (0) {}
+      // [1]=>string(7) "contact"
+      //  echo '</pre>';
+   
+        return call_user_func($callback,$this -> request);//không hiểu lắm nhứng chắc là lấy nội dung trả về trong funtion
     }
   public function renderView($view, $params=[]){ //renderView("home")
     $layoutContent = $this->layoutContent();
