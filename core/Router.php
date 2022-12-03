@@ -26,7 +26,7 @@
     public function resolve(){
       $path = $this -> request  -> getPath();
 
-      $method = $this -> request -> getMethod();
+      $method = $this -> request -> method();
       
       $callback = $this -> routes[$method][$path] ?? false; // routes['get']['/']
         if($callback === false){
@@ -40,7 +40,8 @@
         }
         // phù hợp khi viết  get('/home',[SiteController::class, 'home']);
         if(is_array($callback)){
-          $callback[0] = new $callback[0]();
+          Application::$app -> controller  = new $callback[0]();
+          $callback[0] = Application::$app ->controller;
         }
       //  echo '<pre>';
       //  var_dump($callback); 
@@ -48,7 +49,8 @@
       // [1]=>string(7) "contact"
       //  echo '</pre>';
    
-        return call_user_func($callback,$this -> request);//không hiểu lắm nhứng chắc là lấy nội dung trả về trong funtion
+        return call_user_func($callback,$this -> request);
+        //không hiểu lắm nhứng chắc là lấy nội dung trả về trong funtion
     }
   public function renderView($view, $params=[]){ //renderView("home")
     $layoutContent = $this->layoutContent();
@@ -60,8 +62,9 @@
       return str_replace('{{content}}', $viewContent ,$layoutContent);
   }
   public function layoutContent(){
+    $layout = Application::$app -> controller->layout;
     ob_start();
-    include_once  Application::$ROOT_DIR."/views/layouts/main.php";
+    include_once  Application::$ROOT_DIR."/views/layouts/$layout.php";
     return ob_get_clean();
   }
   public function renderOnLyView($view, $params){
