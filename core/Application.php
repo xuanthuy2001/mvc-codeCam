@@ -4,7 +4,6 @@
     use app\controllers\Controller;
 
     class Application{
-        
         public static string $ROOT_DIR;
         public Router $router;
         public Request $request;

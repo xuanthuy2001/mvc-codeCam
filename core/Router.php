@@ -12,9 +12,8 @@
       $this -> request = $request ;
       $this -> response = $response ;
     }
-
-
-    public function get($path , $callback){
+    public function get($path , $callback)
+    {
       $this -> routes['get'][$path] = $callback; 
       // routes['get']['/'] = function ( ){return "hello world";}
     }
@@ -25,7 +24,6 @@
 
     public function resolve(){
       $path = $this -> request  -> getPath();
-
       $method = $this -> request -> method();
       
       $callback = $this -> routes[$method][$path] ?? false; // routes['get']['/']
